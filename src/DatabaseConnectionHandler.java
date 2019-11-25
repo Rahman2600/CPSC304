@@ -75,7 +75,23 @@ public class DatabaseConnectionHandler {
     }
 
     public ReservationModel getReservation(String cellNum) {
-
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT FROM reservation WHERE cellNum = ?");
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(ps);
+            if (rs.next()) {
+                return new ReservationModel(   rs.getInt("confNo"),
+                        rs.getString("vtname"),
+                        rs.getString("cellphone"),
+                        rs.getString("fromDate"),
+                        rs.getString("fromTime"),
+                        rs.getString("toDate"),
+                        rs.getString("toTime"));
+            }
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+        return null;
     }
 
     private void rollbackConnection() {
